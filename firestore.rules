@@ -1,0 +1,70 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Connection verification path
+    match /test/{docId} {
+      allow read: if true;
+    }
+
+    // Curriculum data: Read-only for students, allow create for seeding
+    match /years/{yearId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+    }
+    match /subjects/{subjectId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+    }
+    match /units/{unitId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+    }
+    match /topics/{topicId} {
+      allow read: if isSignedIn();
+      allow create: if isSignedIn();
+    }
+
+    // Evaluations: Users can read/write their own
+    match /evaluations/{evalId} {
+      allow read: if isSignedIn() && resource.data.userId == request.auth.uid;
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+    }
+
+    // User Profiles
+    match /users/{userId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && request.auth.uid == userId;
+    }
+
+    // User Progress: Users can read all (for ledger), but only write their own
+    match /user_progress/{progressId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && request.resource.data.uid == request.auth.uid;
+    }
+
+    // Question History: Users can read all (for ledger), but only write their own
+    match /question_history/{historyId} {
+      allow read: if isSignedIn();
+      allow write: if isSignedIn() && request.resource.data.uid == request.auth.uid;
+    }
+
+    // Asked Questions: Users can read and write only their own asked questions records
+    match /asked_questions/{askedId} {
+      allow read: if isSignedIn() && resource.data.uid == request.auth.uid;
+      allow write: if isSignedIn() && request.resource.data.uid == request.auth.uid;
+    }
+  }
+}

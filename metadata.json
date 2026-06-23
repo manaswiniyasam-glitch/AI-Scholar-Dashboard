@@ -1,0 +1,6 @@
+{
+  "name": "AI Scholar Dashboard",
+  "description": "An interactive learning platform for 2nd and 3rd year students with AI-powered evaluation, voice input, and multi-language explanations.",
+  "requestFramePermissions": ["microphone"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

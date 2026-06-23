@@ -1,0 +1,81 @@
+{
+  "entities": {
+    "year": {
+      "title": "Year",
+      "description": "Academic year (e.g., 2nd Year, 3rd Year)",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" }
+      },
+      "required": ["name"]
+    },
+    "subject": {
+      "title": "Subject",
+      "description": "Academic subject within a year",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "yearId": { "type": "string" }
+      },
+      "required": ["name", "yearId"]
+    },
+    "unit": {
+      "title": "Unit",
+      "description": "A unit within a subject",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "subjectId": { "type": "string" },
+        "order": { "type": "number" }
+      },
+      "required": ["name", "subjectId", "order"]
+    },
+    "topic": {
+      "title": "Topic",
+      "description": "A topic within a unit",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "unitId": { "type": "string" }
+      },
+      "required": ["name", "unitId"]
+    },
+    "evaluation": {
+      "title": "Evaluation",
+      "description": "Student answer evaluation and score",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "topicId": { "type": "string" },
+        "question": { "type": "string" },
+        "studentAnswer": { "type": "string" },
+        "score": { "type": "number" },
+        "feedback": { "type": "string" },
+        "correctAnswer": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "topicId", "studentAnswer", "score"]
+    },
+    "asked_question": {
+      "title": "Asked Question",
+      "description": "Record of a question asked/generated for a student to avoid repetition across sessions",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "topicId": { "type": "string" },
+        "question": { "type": "string" },
+        "questionType": { "type": "string" },
+        "timestamp": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "topicId", "question", "questionType", "timestamp"]
+    }
+  },
+  "firestore": {
+    "years": { "schema": "year", "description": "Collection of academic years" },
+    "subjects": { "schema": "subject", "description": "Collection of subjects" },
+    "units": { "schema": "unit", "description": "Collection of units" },
+    "topics": { "schema": "topic", "description": "Collection of topics" },
+    "evaluations": { "schema": "evaluation", "description": "Collection of student evaluations" },
+    "asked_questions": { "schema": "asked_question", "description": "Collection of questions generated/asked to users to prevent repetition" }
+  }
+}
